@@ -1,0 +1,2 @@
+# isLearning
+Trial and error
