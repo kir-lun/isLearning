@@ -1,0 +1,51 @@
+import json
+from typing import Dict, Any
+import requests
+import os
+import linecache
+import data
+
+
+def get_username():
+    username = 'kir-lun'
+    return username
+
+
+def get_issue_url():
+    issue_url = 'https://api.github.com/repos/kir-lun/isLearning/issues'
+    return issue_url
+
+
+def get_psd():
+    psd = '这里是密码'
+    return psd
+
+
+def create_issue(name, detail):
+    title = name
+    body = detail
+    issue_detail = {'title': title, 'body': body}
+    isdata = json.dumps(issue_detail)
+    issues_url = get_issue_url()
+    username = get_username()
+    psd = get_psd()
+    response = requests.post(issues_url, data=isdata, auth=(username, psd))
+
+
+def post_issue(summary):
+    result = summary["details"]
+    names = []
+    meta_datas = []
+    status = []
+    for i in result:
+        print(i["records"][0]["name"], "  :", i.get("success"))
+        if not i.get("success"):
+            names.append(i["records"][0]["name"])
+            meta_datas.append(i["records"][0]["meta_datas"])
+            status.append(i["records"][0]["status"])
+    print("=" * 20, "success：false", "=" * 20)
+    while len(names) > 0:
+        name = names.pop()
+        print(name, " :   ", status.pop())
+        meta_data = meta_datas.pop()
+        create_issue(name, json.dumps(meta_data))
